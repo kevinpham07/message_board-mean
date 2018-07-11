@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<title>Message Board</title>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    </head>
+    <style>
+        h1{
+            border-bottom: 2px solid black;
+            margin-bottom: 20px;
+            padding: 5px;
+        }
+        .message{
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        ul{
+            list-style-type: none;
+        }
+    </style>
+    <body>
+        <div class="container">
+            <h1>The Dojo Message Board</h1>
+            <div class="text-center">
+            <% JSON.stringify(messages) %>
+                <% if(messages.errors) { %>
+                  <% for (var msg of messages.errors) { %>
+                    <h4 class="text-danger"><%= msg %></h4>
+                  <% } %>
+                <% } %>
+            </div>
+            <div>
+                <form action="/message" method="post">
+                    <div>
+                        <p>Name:</p>
+                        <input type="text" name="name">
+                    </div>
+                    <div>
+                        <p>Message:</p>
+                        <input class="col-12 message" type="text" name="msg">
+                    </div>
+                    <input type="submit" class="btn btn-success offset-11" value="Post message">
+                </form>
+            </div>
+            <% for( var msg of message) { %>
+            <p>Name: <%= msg.creator %></p>
+            <ul>
+                <li>Message: <%= msg.content %></li>
+                <ul>
+                    <% for(var comment of msg.comments) { %>
+                    <li>Name: <%= comment.creator %></li>
+                    <li>Comment: <%= comment.content %></li>
+                    <% } %>
+                    <li>
+                        <form action="/comment" method="post">
+                            <div>
+                                <p>Name:</p>
+                                <input type="text" name="name">
+                            </div>
+                            <div>
+                                <p>Post comment:</p>
+                                <input class="col-12 message" type="text" name="comment">
+                            </div>
+                            <input type="hidden" name="msg_id" value="<%= msg._id %>">
+                            <input type="submit" class="btn btn-success offset-11" value="Post comment">
+                        </form>
+                    </li>
+                </ul>
+            </ul>
+            <% } %>
+            </div>
+    	</div>
+	</body>
+</html>
